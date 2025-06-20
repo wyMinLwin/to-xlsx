@@ -1,0 +1,12 @@
+{
+  "name": "to-xlsx",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.0",
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
