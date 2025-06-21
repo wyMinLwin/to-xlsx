@@ -1,10 +1,10 @@
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Props } from "./types";
-import { generateHeader } from "./utils";
+import { generateColumnSize, generateHeader } from "./utils";
 
 export function exportToXlsx<T>(props: Props<T>): void {
-    const { data, excludeColumns, fileName = "export", headers = null } = props;
+    const { data, excludeColumns, fileName = "export", headers = null, columnSizes = null } = props;
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
@@ -14,7 +14,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
     worksheet.columns = columns.map((column) => ({
         header: generateHeader(headers, column),
         key: column,
-        width: 50,
+        width: generateColumnSize(columnSizes, column),
     }));
 
     data.forEach((row) => {

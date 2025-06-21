@@ -2,7 +2,9 @@ export type Props<T> = {
     data: T[];
     excludeColumns?: string[];
     fileName?: string;
-    headers?: HeaderType;
+    headers?: HeadersType;
+    columnSizes?: ColumnSizesType;
 };
 
-export type HeaderType = Record<string, string> | null;
+export type HeadersType = Record<string, string> | null;
+export type ColumnSizesType = Record<string, number> | null;
