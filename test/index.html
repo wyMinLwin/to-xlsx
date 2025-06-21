@@ -11,9 +11,13 @@
         <script script type="module">
             const exportButton = document.querySelector("#export-btn");
             exportButton.addEventListener("click", () => {
-               toXlsx.exportToXlsx({
+                toXlsx.exportToXlsx({
                     fileName: "test-export",
-                    data: [{name: "wai"}, {name: "L"}],
+                    data: [
+                        { name: "wai", age: 21 },
+                        { name: "L", age: 21 },
+                    ],
+                    headers: { fake: "username" },
                 });
             });
         </script>

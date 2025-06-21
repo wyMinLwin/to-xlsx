@@ -1,9 +1,10 @@
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Props } from "./types";
+import { generateHeader } from "./utils";
 
 export function exportToXlsx<T>(props: Props<T>): void {
-    const { data, excludeColumns, fileName = "export" } = props;
+    const { data, excludeColumns, fileName = "export", headers = null } = props;
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
@@ -11,7 +12,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
         (column) => !excludeColumns?.includes(column)
     );
     worksheet.columns = columns.map((column) => ({
-        header: column.toUpperCase().slice(0, 1) + column.slice(1),
+        header: generateHeader(headers, column),
         key: column,
         width: 50,
     }));
