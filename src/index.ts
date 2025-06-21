@@ -1,5 +1,29 @@
-console.log("This is interesting");
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
+import { Props } from "./types";
 
-export function exportToXlsx<T>(data: T[]): void {
-    console.log("Exporting to XLSX:", data);
+export function exportToXlsx<T>(props: Props<T>): void {
+    const { data, excludeColumns, fileName = "export" } = props;
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet 1");
+    const columns = Object.keys(data[0] as object).filter(
+        (column) => !excludeColumns?.includes(column)
+    );
+    worksheet.columns = columns.map((column) => ({
+        header: column.toUpperCase().slice(0, 1) + column.slice(1),
+        key: column,
+        width: 50,
+    }));
+
+    data.forEach((row) => {
+        worksheet.addRow(row);
+    });
+
+    workbook.xlsx.writeBuffer().then((buffer) => {
+        const blob = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(blob, fileName);
+    });
 }
