@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <button id="export-btn">Export Button</button>
+        <script script type="module">
+            const exportButton = document.querySelector("#export-btn");
+            import { exportToXlsx } from "../dist/index.esm.js";
+
+            exportButton.addEventListener("click", () => {
+                exportToXlsx([{ name: "wai" }, { name: "L" }]);
+            });
+        </script>
+    </body>
+</html>
