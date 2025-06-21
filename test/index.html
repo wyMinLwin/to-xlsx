@@ -7,12 +7,14 @@
     </head>
     <body>
         <button id="export-btn">Export Button</button>
+        <script src="../dist/index.umd.js"></script>
         <script script type="module">
             const exportButton = document.querySelector("#export-btn");
-            import { exportToXlsx } from "../dist/index.esm.js";
-
             exportButton.addEventListener("click", () => {
-                exportToXlsx([{ name: "wai" }, { name: "L" }]);
+               toXlsx.exportToXlsx({
+                    fileName: "test-export",
+                    data: [{name: "wai"}, {name: "L"}],
+                });
             });
         </script>
     </body>
