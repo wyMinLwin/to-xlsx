@@ -1,25 +1,43 @@
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { Props } from "./types";
-import { generateColumnSize, generateHeader } from "./utils";
+import { Props, SheetsGroupByType } from "./types";
+import { generateColumnSize, generateHeader, getUniqueFields, getWorksheetColumns } from "./utils";
 
 export function exportToXlsx<T>(props: Props<T>): void {
-    const { data, excludeColumns, fileName = "export", headers = null, columnSizes = null } = props;
+    const {
+        data,
+        excludeColumns = null,
+        fileName = "export",
+        headers = null,
+        columnSizes = null,
+        sheetsGroupBy = null,
+    } = props;
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Sheet 1");
-    const columns = Object.keys(data[0] as object).filter(
-        (column) => !excludeColumns?.includes(column)
-    );
-    worksheet.columns = columns.map((column) => ({
-        header: generateHeader(headers, column),
-        key: column,
-        width: generateColumnSize(columnSizes, column),
-    }));
+    if (sheetsGroupBy) {
+        const uniqueFields = getUniqueFields<T, keyof T>(data, sheetsGroupBy.key as keyof T);
+        uniqueFields.forEach((uniqueField) => {
+            const namePattern = sheetsGroupBy.namePattern;
+            const worksheet = workbook.addWorksheet(
+                namePattern.includes("$key")
+                    ? namePattern.replaceAll("$key", String(uniqueField))
+                    : String(uniqueField)
+            );
 
-    data.forEach((row) => {
-        worksheet.addRow(row);
-    });
+            worksheet.columns = getWorksheetColumns(data, headers, columnSizes, excludeColumns);
+
+            data.filter((d) => d[sheetsGroupBy.key as keyof T] == uniqueField).forEach((row) => {
+                worksheet.addRow(row);
+            });
+        });
+    } else {
+        const worksheet = workbook.addWorksheet("Sheet 1");
+        worksheet.columns = getWorksheetColumns(data, headers, columnSizes, excludeColumns);
+
+        data.forEach((row) => {
+            worksheet.addRow(row);
+        });
+    }
 
     workbook.xlsx.writeBuffer().then((buffer) => {
         const blob = new Blob([buffer], {

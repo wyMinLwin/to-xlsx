@@ -15,10 +15,14 @@
                     fileName: "test-export",
                     data: [
                         { name: "wai", age: 21 },
-                        { name: "L", age: 21 },
+                        { name: "L", age: 20 },
                     ],
                     headers: { fake: "username" },
                     columnSizes: { name: 40 },
+                    sheetsGroupBy: {
+                        namePattern: "Age - $key",
+                        key: "age"
+                    }
                 });
             });
         </script>
