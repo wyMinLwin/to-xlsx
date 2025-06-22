@@ -21,7 +21,7 @@
         "format": "prettier --write ."
     },
     "type": "module",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "",
     "keywords": [],
     "author": "Wai Yan Min Lwin",
