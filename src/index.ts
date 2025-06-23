@@ -1,13 +1,13 @@
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { Props, SheetsGroupByType } from "./types";
-import { generateColumnSize, generateHeader, getUniqueFields, getWorksheetColumns } from "./utils";
+import { Props } from "./types";
+import { getUniqueFields, getWorksheetColumns } from "./utils";
 
 export function exportToXlsx<T>(props: Props<T>): void {
     const {
         data,
         excludeColumns = null,
-        fileName = "export",
+        fileName = "ExportSheet",
         headers = null,
         columnSizes = null,
         sheetsGroupBy = null,
@@ -31,7 +31,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
             });
         });
     } else {
-        const worksheet = workbook.addWorksheet("Sheet 1");
+        const worksheet = workbook.addWorksheet(fileName);
         worksheet.columns = getWorksheetColumns(data, headers, columnSizes, excludeColumns);
 
         data.forEach((row) => {
