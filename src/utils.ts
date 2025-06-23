@@ -1,15 +1,28 @@
-import { ColumnSizesType, HeadersType } from "./types";
+import { ColumnSizesType, ColumnsOrderType, HeadersType } from "./types";
 
 export const getWorksheetColumns = <T>(
     data: T[],
     headers: HeadersType,
     columnSizes: ColumnSizesType,
-    excludeColumns: string[] | null
+    excludeColumns: string[] | null,
+    columnsOrder: ColumnsOrderType // e.g. ['age']
 ) => {
-    const columns = Object.keys(data[0] as object).filter(
-        (column) => !excludeColumns?.includes(column)
-    );
-    return columns.map((column) => ({
+    if (!data.length) return [];
+
+    const allColumns = Object.keys(data[0] as object);
+
+    // Filter out excluded columns
+    const filteredColumns = allColumns.filter((column) => !excludeColumns?.includes(column));
+
+    // colums order by user
+    const orderedColumns = columnsOrder
+        ? [
+              ...columnsOrder.filter((col) => filteredColumns.includes(col)),
+              ...filteredColumns.filter((col) => !columnsOrder.includes(col)),
+          ]
+        : filteredColumns;
+
+    return orderedColumns.map((column) => ({
         header: generateHeader(headers, column),
         key: column,
         width: generateColumnSize(columnSizes, column),

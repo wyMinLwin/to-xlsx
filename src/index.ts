@@ -11,6 +11,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
         headers = null,
         columnSizes = null,
         sheetsGroupBy = null,
+        columnsOrder = null,
     } = props;
 
     const workbook = new ExcelJS.Workbook();
@@ -24,7 +25,13 @@ export function exportToXlsx<T>(props: Props<T>): void {
                     : String(uniqueField)
             );
 
-            worksheet.columns = getWorksheetColumns(data, headers, columnSizes, excludeColumns);
+            worksheet.columns = getWorksheetColumns(
+                data,
+                headers,
+                columnSizes,
+                excludeColumns,
+                columnsOrder
+            );
 
             data.filter((d) => d[sheetsGroupBy.key as keyof T] == uniqueField).forEach((row) => {
                 worksheet.addRow(row);
@@ -32,7 +39,13 @@ export function exportToXlsx<T>(props: Props<T>): void {
         });
     } else {
         const worksheet = workbook.addWorksheet(fileName);
-        worksheet.columns = getWorksheetColumns(data, headers, columnSizes, excludeColumns);
+        worksheet.columns = getWorksheetColumns(
+            data,
+            headers,
+            columnSizes,
+            excludeColumns,
+            columnsOrder
+        );
 
         data.forEach((row) => {
             worksheet.addRow(row);

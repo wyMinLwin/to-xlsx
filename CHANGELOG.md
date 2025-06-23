@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.5] - Not released yet
+
+### Added
+
+- Columns Order
+
 ## [0.0.4] - Jun 22, 2025
 
 ### Added
