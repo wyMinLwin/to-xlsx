@@ -22,7 +22,7 @@
         "lint": "eslint src"
     },
     "type": "module",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "",
     "keywords": [],
     "author": "Wai Yan Min Lwin",

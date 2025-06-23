@@ -5,6 +5,7 @@ export type Props<T> = {
     headers?: HeadersType;
     columnSizes?: ColumnSizesType;
     sheetsGroupBy?: SheetsGroupByType;
+    columnsOrder?: ColumnsOrderType;
 };
 
 export type HeadersType = Record<string, string> | null;
@@ -13,3 +14,4 @@ export type SheetsGroupByType = {
     namePattern: string;
     key: string;
 } | null;
+export type ColumnsOrderType = string[] | null;

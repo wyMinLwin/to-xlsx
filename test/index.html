@@ -14,15 +14,17 @@
                 toXlsx.exportToXlsx({
                     fileName: "test-export",
                     data: [
-                        { name: "wai", age: 21 },
-                        { name: "L", age: 20 },
+                        { name: "wai", age: 21, job: "Software Developer" },
+                        { name: "L", age: 21, job: "Detective" },
+                        { name: "Wainus", age: 34, job: "Professional Chess Player"}
                     ],
                     headers: { fake: "username" },
-                    columnSizes: { name: 40 },
+                    columnSizes: { job: 40,  },
                     sheetsGroupBy: {
                         namePattern: "Age - $key",
                         key: "age",
                     },
+                    columnsOrder: ['age']
                 });
             });
         </script>
