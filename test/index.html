@@ -18,11 +18,16 @@
                         { name: "L", age: 21, job: "Detective" },
                         { name: "Wainus", age: 34, job: "Professional Chess Player"}
                     ],
-                    headers: { name: "username" },
+                    columnHeaders: { name: "username" },
                     columnSizes: { job: 40,  },
-                    sheetsGroupBy: {
+                    sheetsBy: {
                         namePattern: "Age - $key",
                         key: "age",
+                    },
+                    title: {
+                        text: "Text Title",
+                        bg: "37bf5c",
+                        color: "000000",
                     },
                     columnsOrder: ['age']
                 });

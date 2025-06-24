@@ -1,17 +1,38 @@
+import { Color } from "exceljs";
+
 export type Props<T> = {
     data: T[];
-    excludeColumns?: string[];
     fileName?: string;
-    headers?: HeadersType;
+    // columns customization
+    columnHeaders?: ColumnHeadersType;
     columnSizes?: ColumnSizesType;
-    sheetsGroupBy?: SheetsGroupByType;
     columnsOrder?: ColumnsOrderType;
+    excludeColumns?: string[];
+    // split by sheets
+    sheetsBy?: SheetsByType;
+    title?: TitleType;
+    subtitle?: SubTitleType;
 };
 
-export type HeadersType = Record<string, string> | null;
+export type ColumnHeadersType = Record<string, string> | null;
+
 export type ColumnSizesType = Record<string, number> | null;
-export type SheetsGroupByType = {
+
+export type SheetsByType = {
     namePattern: string;
     key: string;
 } | null;
+
 export type ColumnsOrderType = string[] | null;
+
+export type TitleType = {
+    text: string;
+    bg?: string;
+    color?: string;
+} | null;
+
+export type SubTitleType = {
+    text: string;
+    bg?: Partial<Color>;
+    color?: Partial<Color>;
+} | null;

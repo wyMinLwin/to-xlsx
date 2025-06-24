@@ -5,6 +5,12 @@
 ### Added
 
 - Columns Order
+- Title
+
+### Changed
+
+- Rename SheetsGroupByType -> SheetsByType, sheetsGroupBy -> sheetsBy
+- Rename HeadersType -> ColumnHeadersType, headers -> columnHeaders
 
 ## [0.0.4] - Jun 22, 2025
 

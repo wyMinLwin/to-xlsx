@@ -1,52 +1,66 @@
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Props } from "./types";
-import { getUniqueFields, getWorksheetColumns } from "./utils";
+import { addTitle, getUniqueFields, getWorksheetColumns } from "./utils";
 
 export function exportToXlsx<T>(props: Props<T>): void {
     const {
         data,
         excludeColumns = null,
         fileName = "ExportSheet",
-        headers = null,
+        columnHeaders = null,
         columnSizes = null,
-        sheetsGroupBy = null,
+        sheetsBy = null,
         columnsOrder = null,
+        title = null,
     } = props;
 
     const workbook = new ExcelJS.Workbook();
-    if (sheetsGroupBy) {
-        const uniqueFields = getUniqueFields<T, keyof T>(data, sheetsGroupBy.key as keyof T);
+    if (sheetsBy) {
+        const uniqueFields = getUniqueFields<T, keyof T>(data, sheetsBy.key as keyof T);
         uniqueFields.forEach((uniqueField) => {
-            const namePattern = sheetsGroupBy.namePattern;
+            const namePattern = sheetsBy.namePattern;
             const worksheet = workbook.addWorksheet(
                 namePattern.includes("$key")
                     ? namePattern.replaceAll("$key", String(uniqueField))
                     : String(uniqueField)
             );
 
-            worksheet.columns = getWorksheetColumns(
+            const columns = getWorksheetColumns(
                 data,
-                headers,
+                columnHeaders,
                 columnSizes,
                 excludeColumns,
                 columnsOrder
             );
-
-            data.filter((d) => d[sheetsGroupBy.key as keyof T] == uniqueField).forEach((row) => {
+            addTitle(worksheet, columns.length, title);
+            // Add header row manually after title
+            worksheet.addRow(columns.map((col) => col.header));
+            // Optionally set column widths
+            if (columnSizes) {
+                worksheet.columns = columns.map((col) => ({ key: col.key, width: col.width }));
+            }
+            data.filter((d) => d[sheetsBy.key as keyof T] == uniqueField).forEach((row) => {
                 worksheet.addRow(row);
             });
         });
     } else {
         const worksheet = workbook.addWorksheet(fileName);
-        worksheet.columns = getWorksheetColumns(
+
+        const columns = getWorksheetColumns(
             data,
-            headers,
+            columnHeaders,
             columnSizes,
             excludeColumns,
             columnsOrder
         );
-
+        addTitle(worksheet, columns.length, title);
+        // Add header row manually after title
+        worksheet.addRow(columns.map((col) => col.header));
+        // Optionally set column widths
+        if (columnSizes) {
+            worksheet.columns = columns.map((col) => ({ key: col.key, width: col.width }));
+        }
         data.forEach((row) => {
             worksheet.addRow(row);
         });
