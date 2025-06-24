@@ -1,4 +1,4 @@
-import { Worksheet } from "exceljs";
+import { Column, Worksheet } from "exceljs";
 import { ColumnSizesType, ColumnsOrderType, ColumnHeadersType, TitleType } from "./types";
 
 export const getWorksheetColumns = <T>(
@@ -7,7 +7,7 @@ export const getWorksheetColumns = <T>(
     columnSizes: ColumnSizesType,
     excludeColumns: string[] | null,
     columnsOrder: ColumnsOrderType // e.g. ['age']
-) => {
+): Partial<Column>[] => {
     if (!data.length) return [];
 
     const allColumns = Object.keys(data[0] as object);
@@ -53,6 +53,7 @@ export const addTitle = (worksheet: Worksheet, length: number, title: TitleType)
     worksheet.getCell(firstCell).value = title?.text;
     worksheet.getCell(firstCell).font = {
         color: { argb: title?.color ?? "000000" },
+        size: title?.fontSize ?? 16,
     };
     worksheet.getCell(firstCell).fill = {
         type: "pattern",

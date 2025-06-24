@@ -13,6 +13,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
         sheetsBy = null,
         columnsOrder = null,
         title = null,
+        columnsStyle = null,
     } = props;
 
     const workbook = new ExcelJS.Workbook();
@@ -35,11 +36,34 @@ export function exportToXlsx<T>(props: Props<T>): void {
             );
             addTitle(worksheet, columns.length, title);
             // Add header row manually after title
-            worksheet.addRow(columns.map((col) => col.header));
+            const headerRow = worksheet.addRow(columns.map((col) => col.header));
+            // Apply styles only to header row
+            if (columnsStyle) {
+                headerRow.eachCell((cell) => {
+                    cell.fill = {
+                        type: "pattern",
+                        pattern: "solid",
+                        fgColor: { argb: columnsStyle.bg },
+                    };
+                    cell.font = {
+                        color: { argb: columnsStyle.color },
+                        size: columnsStyle.fontSize,
+                    };
+                    cell.alignment = {
+                        vertical: "middle",
+                        horizontal: "center",
+                    };
+                });
+            }
             // Optionally set column widths
             if (columnSizes) {
-                worksheet.columns = columns.map((col) => ({ key: col.key, width: col.width }));
+                worksheet.columns = columns.map((col) => ({
+                    key: col.key,
+                    width: col.width,
+                    style: col.style,
+                }));
             }
+
             data.filter((d) => d[sheetsBy.key as keyof T] == uniqueField).forEach((row) => {
                 worksheet.addRow(row);
             });
@@ -56,10 +80,32 @@ export function exportToXlsx<T>(props: Props<T>): void {
         );
         addTitle(worksheet, columns.length, title);
         // Add header row manually after title
-        worksheet.addRow(columns.map((col) => col.header));
+        const headerRow = worksheet.addRow(columns.map((col) => col.header));
+        // Apply styles only to header row
+        if (columnsStyle) {
+            headerRow.eachCell((cell) => {
+                cell.fill = {
+                    type: "pattern",
+                    pattern: "solid",
+                    fgColor: { argb: columnsStyle.bg },
+                };
+                cell.font = {
+                    color: { argb: columnsStyle.color },
+                    size: columnsStyle.fontSize,
+                };
+                cell.alignment = {
+                    vertical: "middle",
+                    horizontal: "center",
+                };
+            });
+        }
         // Optionally set column widths
         if (columnSizes) {
-            worksheet.columns = columns.map((col) => ({ key: col.key, width: col.width }));
+            worksheet.columns = columns.map((col) => ({
+                key: col.key,
+                width: col.width,
+                style: col.style,
+            }));
         }
         data.forEach((row) => {
             worksheet.addRow(row);
