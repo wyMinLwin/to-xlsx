@@ -6,6 +6,7 @@ export type Props<T> = {
     // columns customization
     columnHeaders?: ColumnHeadersType;
     columnSizes?: ColumnSizesType;
+    columnsStyle?: ColumnsStyleType;
     columnsOrder?: ColumnsOrderType;
     excludeColumns?: string[];
     // split by sheets
@@ -18,6 +19,12 @@ export type ColumnHeadersType = Record<string, string> | null;
 
 export type ColumnSizesType = Record<string, number> | null;
 
+export type ColumnsStyleType = {
+    bg?: string;
+    color?: string;
+    fontSize?: number;
+} | null;
+
 export type SheetsByType = {
     namePattern: string;
     key: string;
@@ -29,6 +36,7 @@ export type TitleType = {
     text: string;
     bg?: string;
     color?: string;
+    fontSize?: number;
 } | null;
 
 export type SubTitleType = {
