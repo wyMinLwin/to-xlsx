@@ -43,6 +43,7 @@ export const getUniqueFields = <T, K extends keyof T>(arr: T[], key: K) => {
 };
 
 export const addTitle = (worksheet: Worksheet, length: number, title: TitleType) => {
+    if (!title) return;
     const lastRow = worksheet.lastRow;
     const lastRowNumber = lastRow?.number ?? 1;
     const lastCellCount = lastRow?.cellCount ?? 0;
