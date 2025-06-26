@@ -1,7 +1,8 @@
 import ExcelJS from "exceljs";
-import { saveAs } from "file-saver";
+import { saveFile } from "runtime-save";
 import { Props } from "./types";
 import { addTitle, getUniqueFields, getWorksheetColumns } from "./utils";
+import process from "process";
 
 export function exportToXlsx<T>(props: Props<T>): void {
     const {
@@ -116,6 +117,6 @@ export function exportToXlsx<T>(props: Props<T>): void {
         const blob = new Blob([buffer], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
-        saveAs(blob, fileName);
+        saveFile(fileName + ".xlsx", blob, process.cwd()+'/test/output/');
     });
 }
