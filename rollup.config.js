@@ -28,7 +28,7 @@ export default [
             name: "toXlsx",
             globals: {
                 exceljs: "ExcelJS",
-                "file-saver": "saveAs",
+                "runtime-save": "saveFile",
             },
             sourcemap: true,
         },
