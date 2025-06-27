@@ -1,29 +1,41 @@
 import { exportToXlsx } from "../dist/index.esm.js";
 async function main() {
+    const sampleData = [
+        { name: "John", age: 18, department: "IT", salary: 45000 },
+        { name: "Jane", age: 25, department: "HR", salary: 55000 },
+        { name: "Bob", age: 17, department: "IT", salary: 35000 },
+        { name: "Alice", age: 30, department: "Marketing", salary: 60000 },
+        { name: "Charlie", age: 22, department: "IT", salary: 50000 },
+        { name: "Diana", age: 28, department: "HR", salary: 58000 },
+        { name: "Eve", age: 19, department: "Marketing", salary: 42000 },
+        { name: "Frank", age: 35, department: "IT", salary: 70000 },
+    ];
     exportToXlsx({
-        fileName: "test-export",
-        data: [
-            { name: "wai", age: 21, job: "Software Developer" },
-            { name: "L", age: 21, job: "Detective" },
-            { name: "Wainus", age: 34, job: "Professional Chess Player" },
-        ],
-        columnHeaders: { name: "username" },
-        columnSizes: { job: 40 },
-        sheetsBy: {
-            namePattern: "Age - $key",
-            key: "age",
-        },
+        data: sampleData,
+        fileName: "employees-grouped-by-age",
         title: {
-            text: "Text Title",
-            bg: "37bf5c",
-            color: "000000",
-            fontSize: 17,
+            text: "Employee Report - Grouped by Age",
+            bg: "4472C4",
+            color: "FFFFFF",
+            fontSize: 18,
         },
-        columnsOrder: ["age"],
+
         columnsStyle: {
-            bg: "11a1fa",
-            color: "000000",
-            fontSize: 14,
+            bg: "70AD47",
+            color: "FFFFFF",
+            fontSize: 12,
+        },
+        columnHeaders: {
+            name: "Employee Name",
+            age: "Age",
+            department: "Department",
+            salary: "Annual Salary",
+        },
+        columnSizes: {
+            name: 30,
+            age: 10,
+            department: 20,
+            salary: 15,
         },
     });
 }
