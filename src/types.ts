@@ -13,6 +13,8 @@ export type Props<T> = {
     sheetsBy?: SheetsByType;
     title?: TitleType;
     subtitle?: SubTitleType;
+    // group by functionality
+    groupBy?: GroupByType<T>;
 };
 
 export type ColumnHeadersType = Record<string, string> | null;
@@ -44,3 +46,17 @@ export type SubTitleType = {
     bg?: Partial<Color>;
     color?: Partial<Color>;
 } | null;
+
+export type GroupByType<T> = {
+    conditions: GroupCondition<T>[];
+    subtitleStyle?: {
+        bg?: string;
+        color?: string;
+        fontSize?: number;
+    };
+} | null;
+
+export type GroupCondition<T> = {
+    label: string;
+    filter: (item: T) => boolean;
+};

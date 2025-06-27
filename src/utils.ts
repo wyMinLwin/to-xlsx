@@ -1,5 +1,11 @@
 import { Column, Worksheet } from "exceljs";
-import { ColumnSizesType, ColumnsOrderType, ColumnHeadersType, TitleType } from "./types";
+import {
+    ColumnSizesType,
+    ColumnsOrderType,
+    ColumnHeadersType,
+    TitleType,
+    GroupByType,
+} from "./types";
 
 export const getWorksheetColumns = <T>(
     data: T[],
@@ -61,6 +67,46 @@ export const addTitle = (worksheet: Worksheet, length: number, title: TitleType)
         fgColor: { argb: title?.bg ?? "FFFFFF" },
     };
     worksheet.getCell(firstCell).alignment = { horizontal: "center", vertical: "middle" };
+};
+
+export const addSubtitle = (
+    worksheet: Worksheet,
+    length: number,
+    subtitle: string,
+    subtitleStyle?: { bg?: string; color?: string; fontSize?: number }
+) => {
+    const lastRow = worksheet.lastRow;
+    const lastRowNumber = (lastRow?.number ?? 0) + 1;
+    const firstCell = `A${lastRowNumber}`;
+    const lastCell = `${indexToLetter(length - 1)}${lastRowNumber}`;
+
+    worksheet.mergeCells(`${firstCell}:${lastCell}`);
+    worksheet.getCell(firstCell).value = subtitle;
+    worksheet.getCell(firstCell).font = {
+        color: { argb: subtitleStyle?.color ?? "333333" },
+        size: subtitleStyle?.fontSize ?? 12,
+        bold: true,
+    };
+    worksheet.getCell(firstCell).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: subtitleStyle?.bg ?? "E6E6E6" },
+    };
+    worksheet.getCell(firstCell).alignment = { horizontal: "left", vertical: "middle" };
+};
+
+export const groupDataByConditions = <T>(
+    data: T[],
+    groupBy: GroupByType<T>
+): Array<{ label: string; data: T[] }> => {
+    if (!groupBy) return [];
+
+    return groupBy.conditions
+        .map((condition) => ({
+            label: condition.label,
+            data: data.filter(condition.filter),
+        }))
+        .filter((group) => group.data.length > 0); // Only return groups with data
 };
 
 export const indexToLetter = (index: number) => {
