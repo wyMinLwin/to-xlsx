@@ -5,8 +5,7 @@
     "browser": "dist/index.umd.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "README.md"
+        "dist"
     ],
     "exports": {
         ".": {
