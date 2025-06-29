@@ -6,11 +6,14 @@
 
 - Columns Order
 - Title
+- GroupBy
+- CODE_OF_CONDUCT, CONTRIBUTING, LICENSE
 
 ### Changed
 
 - Rename SheetsGroupByType -> SheetsByType, sheetsGroupBy -> sheetsBy
 - Rename HeadersType -> ColumnHeadersType, headers -> columnHeaders
+- README
 
 ## [0.0.4] - Jun 22, 2025
 
