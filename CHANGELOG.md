@@ -8,6 +8,7 @@
 - Title
 - GroupBy
 - CODE_OF_CONDUCT, CONTRIBUTING, LICENSE
+- Columns Merging
 
 ### Changed
 

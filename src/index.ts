@@ -20,6 +20,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
         columnSizes = null,
         sheetsBy = null,
         columnsOrder = null,
+        columnsMerge = null,
         title = null,
         columnsStyle = null,
         groupBy = null,
@@ -49,7 +50,30 @@ export function exportToXlsx<T>(props: Props<T>): void {
 
                 // Add header row for each group
                 const headerRow = worksheet.addRow(columns.map((col) => col.header));
-
+                //const columnIndex = columns.findIndex(c => c.header === (columnHeaders?.['name'] ?? 'name'))+1;
+                //const columnIndex2 = columns.findIndex(c => c.header === (columnHeaders?.['salary'] ?? 'salary'))+1;
+                //worksheet.mergeCells(`${headerRow.getCell(columnIndex).address}:${headerRow.getCell(columnIndex2).address}`);
+                //worksheet.getCell(headerRow.getCell(columnIndex).address).text =
+                if (columnsMerge) {
+                    columnsMerge.forEach((cm) => {
+                        const startCol =
+                            columns.findIndex(
+                                (c) =>
+                                    c.header ===
+                                    (columnHeaders?.[cm.keys.startColumn] ?? cm.keys.startColumn)
+                            ) + 1;
+                        const endCol =
+                            columns.findIndex(
+                                (c) =>
+                                    c.header ===
+                                    (columnHeaders?.[cm.keys.endColumn] ?? cm.keys.endColumn)
+                            ) + 1;
+                        worksheet.mergeCells(
+                            `${headerRow.getCell(startCol).address}:${headerRow.getCell(endCol).address}`
+                        );
+                        headerRow.getCell(startCol).value = cm.columnName;
+                    });
+                }
                 // Apply styles to header row
                 if (columnsStyle) {
                     headerRow.eachCell((cell) => {
@@ -85,6 +109,26 @@ export function exportToXlsx<T>(props: Props<T>): void {
         } else {
             // Regular mode without grouping
             const headerRow = worksheet.addRow(columns.map((col) => col.header));
+            if (columnsMerge) {
+                columnsMerge.forEach((cm) => {
+                    const startCol =
+                        columns.findIndex(
+                            (c) =>
+                                c.header ===
+                                (columnHeaders?.[cm.keys.startColumn] ?? cm.keys.startColumn)
+                        ) + 1;
+                    const endCol =
+                        columns.findIndex(
+                            (c) =>
+                                c.header ===
+                                (columnHeaders?.[cm.keys.endColumn] ?? cm.keys.endColumn)
+                        ) + 1;
+                    worksheet.mergeCells(
+                        `${headerRow.getCell(startCol).address}:${headerRow.getCell(endCol).address}`
+                    );
+                    headerRow.getCell(startCol).value = cm.columnName;
+                });
+            }
 
             // Apply styles to header row
             if (columnsStyle) {
