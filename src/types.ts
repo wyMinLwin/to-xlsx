@@ -8,6 +8,7 @@ export type Props<T> = {
     columnSizes?: ColumnSizesType;
     columnsStyle?: ColumnsStyleType;
     columnsOrder?: ColumnsOrderType;
+    columnsMerge?: ColumnsMergeType;
     excludeColumns?: string[];
     // split by sheets
     sheetsBy?: SheetsByType;
@@ -27,12 +28,22 @@ export type ColumnsStyleType = {
     fontSize?: number;
 } | null;
 
+export type ColumnsOrderType = string[] | null;
+
+export type ColumnsMergeType =
+    | {
+          keys: {
+              startColumn: string;
+              endColumn: string;
+          };
+          columnName: string;
+      }[]
+    | null;
+
 export type SheetsByType = {
     namePattern: string;
     key: string;
 } | null;
-
-export type ColumnsOrderType = string[] | null;
 
 export type TitleType = {
     text: string;

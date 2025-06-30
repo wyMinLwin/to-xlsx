@@ -112,7 +112,7 @@ Main function to export data to Excel.
 
 ## Contributing
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
+Please see [CONTRIBUTING Guide](CONTRIBUTING.md) for details on how to contribute to this project.
 
 ## Code of Conduct
 

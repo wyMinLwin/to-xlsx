@@ -10,33 +10,54 @@ async function main() {
         { name: "Eve", age: 19, department: "Marketing", salary: 42000 },
         { name: "Frank", age: 35, department: "IT", salary: 70000 },
     ];
-    exportToXlsx({
-        data: sampleData,
-        fileName: "employees-grouped-by-age",
-        title: {
-            text: "Employee Report - Grouped by Age",
-            bg: "4472C4",
-            color: "FFFFFF",
-            fontSize: 18,
-        },
+    try {
+        exportToXlsx({
+            data: sampleData,
+            fileName: "employees-grouped-by-age",
+            title: {
+                text: "Employee Report - Grouped by Age",
+                bg: "4472C4",
+                color: "FFFFFF",
+                fontSize: 18,
+            },
 
-        columnsStyle: {
-            bg: "70AD47",
-            color: "FFFFFF",
-            fontSize: 12,
-        },
-        columnHeaders: {
-            name: "Employee Name",
-            age: "Age",
-            department: "Department",
-            salary: "Annual Salary",
-        },
-        columnSizes: {
-            name: 30,
-            age: 10,
-            department: 20,
-            salary: 15,
-        },
-    });
+            columnsStyle: {
+                bg: "70AD47",
+                color: "FFFFFF",
+                fontSize: 12,
+            },
+            columnHeaders: {
+                name: "Employee Name",
+                age: "Age",
+                department: "Department",
+                salary: "Annual Salary",
+            },
+            columnSizes: {
+                name: 30,
+                age: 10,
+                department: 20,
+                salary: 15,
+            },
+            columnsMerge: [
+                {
+                    keys: {
+                        startColumn: "name",
+                        endColumn: "age",
+                    },
+                    columnName: "Personal",
+                },
+                {
+                    keys: {
+                        startColumn: "department",
+                        endColumn: "salary",
+                    },
+                    columnName: "Company",
+                },
+            ],
+        });
+        console.log("✅ Successfully exported!");
+    } catch {
+        console.log("❎ Failed to export excel!");
+    }
 }
 main();
