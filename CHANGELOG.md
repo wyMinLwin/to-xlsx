@@ -9,6 +9,7 @@
 - GroupBy
 - CODE_OF_CONDUCT, CONTRIBUTING, LICENSE
 - Columns Merging
+- Extendable border feature for Title, Subtitle, and GroupBy sections
 
 ### Changed
 

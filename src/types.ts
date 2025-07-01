@@ -50,12 +50,14 @@ export type TitleType = {
     bg?: string;
     color?: string;
     fontSize?: number;
+    border?: BorderType;
 } | null;
 
 export type SubTitleType = {
     text: string;
     bg?: Partial<Color>;
     color?: Partial<Color>;
+    border?: BorderType;
 } | null;
 
 export type GroupByType<T> = {
@@ -64,10 +66,36 @@ export type GroupByType<T> = {
         bg?: string;
         color?: string;
         fontSize?: number;
+        border?: BorderType;
     };
 } | null;
 
 export type GroupCondition<T> = {
     label: string;
     filter: (item: T) => boolean;
+};
+
+export type BorderType = {
+    top?: BorderStyleType;
+    left?: BorderStyleType;
+    bottom?: BorderStyleType;
+    right?: BorderStyleType;
+    all?: BorderStyleType; // shorthand to set all borders at once
+};
+
+export type BorderStyleType = {
+    style?:
+        | "thin"
+        | "dotted"
+        | "dashDot"
+        | "hair"
+        | "dashDotDot"
+        | "slantDashDot"
+        | "mediumDashed"
+        | "mediumDashDotDot"
+        | "mediumDashDot"
+        | "medium"
+        | "double"
+        | "thick";
+    color?: string;
 };
