@@ -5,6 +5,7 @@ import {
     ColumnHeadersType,
     TitleType,
     GroupByType,
+    BorderType,
 } from "./types";
 
 export const getWorksheetColumns = <T>(
@@ -67,13 +68,23 @@ export const addTitle = (worksheet: Worksheet, length: number, title: TitleType)
         fgColor: { argb: title?.bg ?? "FFFFFF" },
     };
     worksheet.getCell(firstCell).alignment = { horizontal: "center", vertical: "middle" };
+
+    // Apply border if specified
+    if (title.border) {
+        applyBorders(worksheet, firstCell, title.border);
+    }
 };
 
 export const addSubtitle = (
     worksheet: Worksheet,
     length: number,
     subtitle: string,
-    subtitleStyle?: { bg?: string; color?: string; fontSize?: number }
+    subtitleStyle?: {
+        bg?: string;
+        color?: string;
+        fontSize?: number;
+        border?: BorderType;
+    }
 ) => {
     const lastRow = worksheet.lastRow;
     const lastRowNumber = (lastRow?.number ?? 0) + 1;
@@ -93,6 +104,11 @@ export const addSubtitle = (
         fgColor: { argb: subtitleStyle?.bg ?? "E6E6E6" },
     };
     worksheet.getCell(firstCell).alignment = { horizontal: "left", vertical: "middle" };
+
+    // Apply border if specified
+    if (subtitleStyle?.border) {
+        applyBorders(worksheet, firstCell, subtitleStyle.border);
+    }
 };
 
 export const groupDataByConditions = <T>(
@@ -116,4 +132,64 @@ export const indexToLetter = (index: number) => {
         index = Math.floor(index / 26) - 1;
     }
     return letters;
+};
+
+/**
+ * Applies border styles to a cell or range of cells
+ */
+export const applyBorders = (worksheet: Worksheet, cellRef: string, borderProps?: BorderType) => {
+    if (!borderProps) return;
+
+    const cell = worksheet.getCell(cellRef);
+    const border: Partial<{
+        top: { style: string; color: { argb: string } };
+        left: { style: string; color: { argb: string } };
+        bottom: { style: string; color: { argb: string } };
+        right: { style: string; color: { argb: string } };
+    }> = {};
+
+    // Apply specific borders if defined
+    if (borderProps.top) {
+        border.top = {
+            style: borderProps.top.style || "thin",
+            color: { argb: borderProps.top.color || "000000" },
+        };
+    }
+
+    if (borderProps.left) {
+        border.left = {
+            style: borderProps.left.style || "thin",
+            color: { argb: borderProps.left.color || "000000" },
+        };
+    }
+
+    if (borderProps.bottom) {
+        border.bottom = {
+            style: borderProps.bottom.style || "thin",
+            color: { argb: borderProps.bottom.color || "000000" },
+        };
+    }
+
+    if (borderProps.right) {
+        border.right = {
+            style: borderProps.right.style || "thin",
+            color: { argb: borderProps.right.color || "000000" },
+        };
+    }
+
+    // Apply the same border to all sides if 'all' is defined
+    if (borderProps.all) {
+        const allBorder = {
+            style: borderProps.all.style || "thin",
+            color: { argb: borderProps.all.color || "000000" },
+        };
+
+        border.top = allBorder;
+        border.left = allBorder;
+        border.bottom = allBorder;
+        border.right = allBorder;
+    }
+
+    // Type assertion needed because ExcelJS has a more specific type for border styles
+    cell.border = border as unknown as typeof cell.border;
 };

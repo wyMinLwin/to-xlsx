@@ -91,19 +91,74 @@ Main function to export data to Excel.
 
 #### Props
 
-| Property       | Type                           | Description                     | Default       |
-| -------------- | ------------------------------ | ------------------------------- | ------------- |
-| data           | Array<T>                       | The data array to export        | Required      |
-| fileName       | string                         | Name of the output file         | "ExportSheet" |
-| columnHeaders  | Record<string, string> \| null | Custom headers for columns      | null          |
-| columnSizes    | Record<string, number> \| null | Custom widths for columns       | null          |
-| columnsStyle   | ColumnsStyleType               | Style for column headers        | null          |
-| columnsOrder   | string[]                       | Order of columns in the output  | null          |
-| excludeColumns | string[]                       | Columns to exclude from export  | null          |
-| sheetsBy       | SheetsByType                   | Split data into multiple sheets | null          |
-| title          | TitleType                      | Title configuration             | null          |
-| subtitle       | SubTitleType                   | Subtitle configuration          | null          |
-| groupBy        | GroupByType<T>                 | Group data configuration        | null          |
+| Property       | Type                           | Description                      | Default       |
+| -------------- | ------------------------------ | -------------------------------- | ------------- |
+| data           | Array<T>                       | The data array to export         | Required      |
+| fileName       | string                         | Name of the output file          | "ExportSheet" |
+| columnHeaders  | Record<string, string> \| null | Custom headers for columns       | null          |
+| columnSizes    | Record<string, number> \| null | Custom widths for columns        | null          |
+| columnsStyle   | ColumnsStyleType               | Style for column headers         | null          |
+| columnsOrder   | string[]                       | Order of columns in the output   | null          |
+| excludeColumns | string[]                       | Columns to exclude from export   | null          |
+| sheetsBy       | SheetsByType                   | Split data into multiple sheets  | null          |
+| title          | TitleType                      | Title with optional borders      | null          |
+| subtitle       | SubTitleType                   | Subtitle with optional borders   | null          |
+| groupBy        | GroupByType<T>                 | Group data with optional borders | null          |
+
+## Border Customization
+
+You can now add custom borders to Title, Subtitle, and GroupBy sections:
+
+```javascript
+exportToXlsx({
+    // ...other props
+    title: {
+        text: "Employee Report",
+        bg: "4472C4",
+        color: "FFFFFF",
+        fontSize: 18,
+        border: {
+            // Apply the same border to all sides
+            all: {
+                style: "thick",
+                color: "000000",
+            },
+            // Or specify individual sides
+            // top: { style: "thin", color: "FF0000" },
+            // left: { style: "dotted", color: "00FF00" },
+            // bottom: { style: "medium", color: "0000FF" },
+            // right: { style: "dashed", color: "FFFF00" }
+        },
+    },
+    // GroupBy with custom borders for subtitles
+    groupBy: {
+        // ...other groupBy properties
+        subtitleStyle: {
+            bg: "BDD7EE",
+            color: "000000",
+            fontSize: 14,
+            border: {
+                bottom: { style: "medium", color: "0070C0" },
+            },
+        },
+    },
+});
+```
+
+### Available Border Styles
+
+- `thin` - A thin border (default if style is not specified)
+- `dotted` - A dotted border
+- `dashDot` - A dash-dot border
+- `hair` - A hair (very thin) border
+- `dashDotDot` - A dash-dot-dot border
+- `slantDashDot` - A slant dash-dot border
+- `mediumDashed` - A medium dashed border
+- `mediumDashDotDot` - A medium dash-dot-dot border
+- `mediumDashDot` - A medium dash-dot border
+- `medium` - A medium border
+- `double` - A double border
+- `thick` - A thick border
 
 ## Dependencies
 

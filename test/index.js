@@ -19,6 +19,12 @@ async function main() {
                 bg: "4472C4",
                 color: "FFFFFF",
                 fontSize: 18,
+                border: {
+                    all: {
+                        style: "thick",
+                        color: "000000",
+                    },
+                },
             },
 
             columnsStyle: {
@@ -54,6 +60,31 @@ async function main() {
                     columnName: "Company",
                 },
             ],
+            groupBy: {
+                conditions: [
+                    {
+                        label: "Under 20",
+                        filter: (item) => item.age < 20,
+                    },
+                    {
+                        label: "20-30",
+                        filter: (item) => item.age >= 20 && item.age < 30,
+                    },
+                    {
+                        label: "30+",
+                        filter: (item) => item.age >= 30,
+                    },
+                ],
+                subtitleStyle: {
+                    bg: "BDD7EE",
+                    color: "000000",
+                    fontSize: 14,
+                    border: {
+                        bottom: { style: "medium", color: "0070C0" },
+                        left: { style: "thin", color: "0070C0" },
+                    },
+                },
+            },
         });
         console.log("✅ Successfully exported!");
     } catch {
