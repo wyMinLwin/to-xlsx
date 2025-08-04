@@ -48,6 +48,6 @@
     },
     "dependencies": {
         "exceljs": "^4.4.0",
-        "runtime-save": "^1.0.0"
+        "runtime-save": "^1.1.1"
     }
 }
