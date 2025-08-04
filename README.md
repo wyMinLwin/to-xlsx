@@ -1,22 +1,23 @@
 # to-xlsx
 
-A lightweight JavaScript/TypeScript library to export data to Excel XLSX files with advanced
-formatting options.
+A powerful JavaScript/TypeScript library for exporting data to Excel XLSX files with advanced
+formatting, grouping, and calculation features.
 
 [![npm version](https://img.shields.io/npm/v/to-xlsx.svg)](https://www.npmjs.com/package/to-xlsx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Features
+## ✨ Features
 
-- Export JavaScript/TypeScript arrays to Excel XLSX files
-- Customizable column headers and sizes
-- Support for styling (colors, fonts, etc.)
-- Group data with subtitles
-- Split data across multiple sheets
-- Exclude specific columns
-- Order columns as needed
+- 📊 **Export Arrays to Excel** - Convert JavaScript/TypeScript arrays to XLSX files
+- 🎨 **Advanced Styling** - Customize colors, fonts, backgrounds, and borders
+- 📝 **Custom Headers & Titles** - Add custom column headers and report titles
+- 📏 **Column Management** - Set custom widths, reorder, merge, or exclude columns
+- 🗂️ **Data Grouping** - Group data with custom conditions and styled subtitles
+- 📄 **Multi-Sheet Support** - Split data across multiple worksheets
+- 🧮 **Calculations** - Automatic subtotals and grand totals with multiple operations
+- 🎯 **TypeScript Support** - Full type safety and IntelliSense support
 
-## Installation
+## 📦 Installation
 
 ```bash
 # npm
@@ -24,115 +25,87 @@ npm install to-xlsx
 
 # pnpm
 pnpm add to-xlsx
+
+# yarn
+yarn add to-xlsx
 ```
 
-## Usage
+## 🚀 Quick Start
 
 ```javascript
 import { exportToXlsx } from "to-xlsx";
 
-// Your data array
-const employees = [
-    { name: "John", age: 18, department: "IT", salary: 45000 },
-    { name: "Jane", age: 25, department: "HR", salary: 55000 },
-    { name: "Bob", age: 17, department: "IT", salary: 35000 },
-    // ...more data
+const data = [
+    { name: "John", age: 28, department: "IT", salary: 45000 },
+    { name: "Jane", age: 32, department: "HR", salary: 55000 },
+    { name: "Bob", age: 25, department: "IT", salary: 35000 },
 ];
 
-// Basic usage
+// Basic export
 exportToXlsx({
-    data: employees,
-    fileName: "employees-report",
+    data,
+    fileName: "employees",
 });
+```
 
-// Advanced usage with styling and grouping
+## 📚 Usage Examples
+
+### 🎨 Styled Export with Custom Headers
+
+```javascript
 exportToXlsx({
     data: employees,
-    fileName: "employees-grouped-by-age",
+    fileName: "employee-report",
     title: {
-        text: "Employee Report - Grouped by Age",
+        text: "Employee Directory",
         bg: "4472C4",
         color: "FFFFFF",
-        fontSize: 18,
+        fontSize: 16,
+        border: {
+            all: { style: "thick", color: "000000" },
+        },
+    },
+    columnHeaders: {
+        name: "Full Name",
+        age: "Age",
+        department: "Department",
+        salary: "Annual Salary",
+    },
+    columnSizes: {
+        name: 25,
+        age: 10,
+        department: 20,
+        salary: 15,
     },
     columnsStyle: {
         bg: "70AD47",
         color: "FFFFFF",
         fontSize: 12,
     },
-    columnHeaders: {
-        name: "Employee Name",
-        age: "Age",
-        department: "Department",
-        salary: "Annual Salary",
-    },
-    groupBy: {
-        field: "age",
-        ranges: [
-            { min: 0, max: 18, label: "Under 18" },
-            { min: 18, max: 25, label: "18-25" },
-            { min: 25, max: 35, label: "25-35" },
-            { min: 35, max: Infinity, label: "35+" },
-        ],
-        subtitleStyle: {
-            bg: "BDD7EE",
-            color: "000000",
-            fontSize: 14,
-        },
-    },
 });
 ```
 
-## API Reference
-
-### exportToXlsx(props)
-
-Main function to export data to Excel.
-
-#### Props
-
-| Property       | Type                           | Description                      | Default       |
-| -------------- | ------------------------------ | -------------------------------- | ------------- |
-| data           | Array<T>                       | The data array to export         | Required      |
-| fileName       | string                         | Name of the output file          | "ExportSheet" |
-| columnHeaders  | Record<string, string> \| null | Custom headers for columns       | null          |
-| columnSizes    | Record<string, number> \| null | Custom widths for columns        | null          |
-| columnsStyle   | ColumnsStyleType               | Style for column headers         | null          |
-| columnsOrder   | string[]                       | Order of columns in the output   | null          |
-| excludeColumns | string[]                       | Columns to exclude from export   | null          |
-| sheetsBy       | SheetsByType                   | Split data into multiple sheets  | null          |
-| title          | TitleType                      | Title with optional borders      | null          |
-| subtitle       | SubTitleType                   | Subtitle with optional borders   | null          |
-| groupBy        | GroupByType<T>                 | Group data with optional borders | null          |
-
-## Border Customization
-
-You can now add custom borders to Title, Subtitle, and GroupBy sections:
+### 🗂️ Data Grouping with Subtotals
 
 ```javascript
 exportToXlsx({
-    // ...other props
-    title: {
-        text: "Employee Report",
-        bg: "4472C4",
-        color: "FFFFFF",
-        fontSize: 18,
-        border: {
-            // Apply the same border to all sides
-            all: {
-                style: "thick",
-                color: "000000",
-            },
-            // Or specify individual sides
-            // top: { style: "thin", color: "FF0000" },
-            // left: { style: "dotted", color: "00FF00" },
-            // bottom: { style: "medium", color: "0000FF" },
-            // right: { style: "dashed", color: "FFFF00" }
-        },
-    },
-    // GroupBy with custom borders for subtitles
+    data: employees,
+    fileName: "employees-by-age-group",
     groupBy: {
-        // ...other groupBy properties
+        conditions: [
+            {
+                label: "Young (Under 30)",
+                filter: (item) => item.age < 30,
+            },
+            {
+                label: "Mid-Career (30-40)",
+                filter: (item) => item.age >= 30 && item.age < 40,
+            },
+            {
+                label: "Senior (40+)",
+                filter: (item) => item.age >= 40,
+            },
+        ],
         subtitleStyle: {
             bg: "BDD7EE",
             color: "000000",
@@ -141,39 +114,271 @@ exportToXlsx({
                 bottom: { style: "medium", color: "0070C0" },
             },
         },
+        showSubtotals: true,
+        subtotalStyle: {
+            bg: "E6F3FF",
+            color: "000000",
+            fontSize: 11,
+            border: {
+                all: { style: "thin", color: "0070C0" },
+            },
+        },
+    },
+    totals: {
+        columns: ["salary"],
+        showGrandTotal: true,
+        subtotalLabel: "Group Subtotal",
+        grandTotalLabel: "Total Company Payroll",
+        operations: {
+            salary: "sum",
+        },
+        grandTotalStyle: {
+            bg: "4472C4",
+            color: "FFFFFF",
+            fontSize: 13,
+            border: {
+                all: { style: "thick", color: "000000" },
+            },
+        },
     },
 });
 ```
 
-### Available Border Styles
+### 🧮 Advanced Calculations
 
-- `thin` - A thin border (default if style is not specified)
-- `dotted` - A dotted border
-- `dashDot` - A dash-dot border
-- `hair` - A hair (very thin) border
-- `dashDotDot` - A dash-dot-dot border
-- `slantDashDot` - A slant dash-dot border
-- `mediumDashed` - A medium dashed border
-- `mediumDashDotDot` - A medium dash-dot-dot border
-- `mediumDashDot` - A medium dash-dot border
-- `medium` - A medium border
-- `double` - A double border
-- `thick` - A thick border
+```javascript
+exportToXlsx({
+    data: salesData,
+    fileName: "sales-analysis",
+    totals: {
+        columns: ["quantity", "revenue", "profit"],
+        showGrandTotal: true,
+        operations: {
+            quantity: "sum", // Total units sold
+            revenue: "sum", // Total revenue
+            profit: "avg", // Average profit margin
+        },
+        grandTotalLabel: "SUMMARY TOTALS",
+    },
+});
+```
 
-## Dependencies
+### 🔗 Column Merging
 
-- [exceljs](https://github.com/exceljs/exceljs) - Excel workbook manager
-- [runtime-save](https://github.com/wyMinLwin/runtime-save) - File saving utility
+```javascript
+exportToXlsx({
+    data: employees,
+    columnsMerge: [
+        {
+            keys: {
+                startColumn: "firstName",
+                endColumn: "lastName",
+            },
+            columnName: "Personal Info",
+        },
+        {
+            keys: {
+                startColumn: "department",
+                endColumn: "salary",
+            },
+            columnName: "Work Details",
+        },
+    ],
+});
+```
 
-## Contributing
+### 📄 Multi-Sheet Export
 
-Please see [CONTRIBUTING Guide](CONTRIBUTING.md) for details on how to contribute to this project.
+```javascript
+exportToXlsx({
+    data: employees,
+    sheetsBy: {
+        key: "department",
+        namePattern: "$key Department", // Creates sheets like "IT Department", "HR Department"
+    },
+});
+```
 
-## Code of Conduct
+## 📖 API Reference
 
-This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected
-to uphold this code.
+### `exportToXlsx(props: Props<T>)`
 
-## License
+Main function to export data to Excel.
 
-This project is licensed under the [MIT License](LICENSE).
+#### Props
+
+| Property         | Type                     | Description                          | Default         |
+| ---------------- | ------------------------ | ------------------------------------ | --------------- |
+| `data`           | `T[]`                    | Array of data objects to export      | **Required**    |
+| `fileName`       | `string`                 | Output file name (without extension) | `"ExportSheet"` |
+| `columnHeaders`  | `Record<string, string>` | Custom column headers                | `null`          |
+| `columnSizes`    | `Record<string, number>` | Column widths                        | `null`          |
+| `columnsStyle`   | `ColumnsStyleType`       | Header row styling                   | `null`          |
+| `columnsOrder`   | `string[]`               | Custom column order                  | `null`          |
+| `columnsMerge`   | `ColumnsMergeType`       | Merge column headers                 | `null`          |
+| `excludeColumns` | `string[]`               | Columns to exclude                   | `null`          |
+| `sheetsBy`       | `SheetsByType`           | Split into multiple sheets           | `null`          |
+| `title`          | `TitleType`              | Report title configuration           | `null`          |
+| `groupBy`        | `GroupByType<T>`         | Data grouping configuration          | `null`          |
+| `totals`         | `TotalsType`             | Calculations configuration           | `null`          |
+
+### Type Definitions
+
+#### `TitleType`
+
+```typescript
+{
+    text: string;
+    bg?: string;           // Background color (hex)
+    color?: string;        // Text color (hex)
+    fontSize?: number;     // Font size
+    border?: BorderType;   // Border styling
+}
+```
+
+#### `GroupByType<T>`
+
+```typescript
+{
+    conditions: GroupCondition<T>[];
+    subtitleStyle?: {
+        bg?: string;
+        color?: string;
+        fontSize?: number;
+        border?: BorderType;
+    };
+    showSubtotals?: boolean;      // Enable subtotal rows
+    subtotalStyle?: {             // Subtotal row styling
+        bg?: string;
+        color?: string;
+        fontSize?: number;
+        border?: BorderType;
+    };
+}
+```
+
+#### `TotalsType`
+
+```typescript
+{
+    columns: string[];                    // Columns to calculate
+    showGrandTotal?: boolean;            // Show grand total row
+    subtotalLabel?: string;              // Subtotal row label
+    grandTotalLabel?: string;            // Grand total row label
+    operations?: {                       // Calculation operations
+        [columnName: string]: 'sum' | 'avg' | 'count' | 'min' | 'max';
+    };
+    grandTotalStyle?: {                  // Grand total styling
+        bg?: string;
+        color?: string;
+        fontSize?: number;
+        border?: BorderType;
+    };
+}
+```
+
+#### `BorderType`
+
+```typescript
+{
+    top?: BorderStyleType;
+    left?: BorderStyleType;
+    bottom?: BorderStyleType;
+    right?: BorderStyleType;
+    all?: BorderStyleType;    // Shorthand for all borders
+}
+```
+
+#### `BorderStyleType`
+
+```typescript
+{
+    style?: 'thin' | 'dotted' | 'dashDot' | 'hair' | 'dashDotDot' |
+            'slantDashDot' | 'mediumDashed' | 'mediumDashDotDot' |
+            'mediumDashDot' | 'medium' | 'double' | 'thick';
+    color?: string;           // Border color (hex)
+}
+```
+
+## 🎨 Styling Guide
+
+### Colors
+
+Use hex color codes without the `#` symbol:
+
+- `"FF0000"` for red
+- `"00FF00"` for green
+- `"0000FF"` for blue
+- `"FFFFFF"` for white
+- `"000000"` for black
+
+### Border Styles
+
+Available border styles in order of thickness:
+
+- `hair` → `thin` → `medium` → `thick`
+- `dotted`, `dashDot`, `dashDotDot` for patterns
+- `double` for double lines
+
+## 🧮 Calculation Operations
+
+| Operation | Description               | Example Use Case        |
+| --------- | ------------------------- | ----------------------- |
+| `sum`     | Addition of all values    | Total sales, quantities |
+| `avg`     | Average of all values     | Average price, rating   |
+| `count`   | Count of non-empty values | Number of items         |
+| `min`     | Minimum value             | Lowest price            |
+| `max`     | Maximum value             | Highest score           |
+
+## 🔧 Advanced Features
+
+### Data Filtering for Groups
+
+Use custom filter functions for flexible grouping:
+
+```javascript
+groupBy: {
+    conditions: [
+        {
+            label: "High Performers",
+            filter: (employee) => employee.rating >= 4.5 && employee.salary > 60000,
+        },
+        {
+            label: "New Hires",
+            filter: (employee) => new Date(employee.hireDate) > new Date("2024-01-01"),
+        },
+    ];
+}
+```
+
+### Multiple Calculation Types
+
+Different operations on different columns:
+
+```javascript
+totals: {
+    columns: ["quantity", "price", "rating"],
+    operations: {
+        quantity: "sum",    // Total units
+        price: "avg",       // Average price
+        rating: "max"       // Best rating
+    }
+}
+```
+
+## 🛠️ Dependencies
+
+- [**exceljs**](https://github.com/exceljs/exceljs) - Excel workbook management
+- [**runtime-save**](https://github.com/wyMinLwin/runtime-save) - Cross-platform file saving
+
+## 🤝 Contributing
+
+Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📋 Code of Conduct
+
+This project follows our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it before contributing.
+
+## 📄 License
+
+Licensed under the [MIT License](LICENSE).

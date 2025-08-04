@@ -6,6 +6,7 @@ import {
     TitleType,
     GroupByType,
     BorderType,
+    TotalsType,
 } from "./types";
 
 export const getWorksheetColumns = <T>(
@@ -192,4 +193,161 @@ export const applyBorders = (worksheet: Worksheet, cellRef: string, borderProps?
 
     // Type assertion needed because ExcelJS has a more specific type for border styles
     cell.border = border as unknown as typeof cell.border;
+};
+
+/**
+ * Calculate totals for specified columns based on operation type
+ */
+export const calculateTotals = <T>(data: T[], totals: TotalsType): Record<string, number> => {
+    if (!totals || !totals.columns.length) return {};
+
+    const results: Record<string, number> = {};
+
+    totals.columns.forEach((columnKey) => {
+        const operation = totals.operations?.[columnKey] || "sum";
+        const values = data
+            .map((item) => {
+                const value = item[columnKey as keyof T];
+                return typeof value === "number" ? value : parseFloat(String(value));
+            })
+            .filter((value) => !isNaN(value));
+
+        switch (operation) {
+            case "sum":
+                results[columnKey] = values.reduce((sum, val) => sum + val, 0);
+                break;
+            case "avg":
+                results[columnKey] =
+                    values.length > 0
+                        ? values.reduce((sum, val) => sum + val, 0) / values.length
+                        : 0;
+                break;
+            case "count":
+                results[columnKey] = values.length;
+                break;
+            case "min":
+                results[columnKey] = values.length > 0 ? Math.min(...values) : 0;
+                break;
+            case "max":
+                results[columnKey] = values.length > 0 ? Math.max(...values) : 0;
+                break;
+            default:
+                results[columnKey] = values.reduce((sum, val) => sum + val, 0);
+        }
+    });
+
+    return results;
+};
+
+/**
+ * Add subtotal row to worksheet
+ */
+export const addSubtotalRow = <T>(
+    worksheet: Worksheet,
+    data: T[],
+    totals: TotalsType,
+    columns: Partial<Column>[],
+    groupBy?: GroupByType<T>
+) => {
+    if (!totals || !totals.columns.length) return;
+
+    const calculatedTotals = calculateTotals(data, totals);
+    const subtotalLabel = totals.subtotalLabel || "Subtotal";
+
+    // Create subtotal row data
+    const subtotalRowData: (string | number)[] = columns.map((col) => {
+        const columnKey = col.key as string;
+
+        if (totals.columns.includes(columnKey)) {
+            return calculatedTotals[columnKey] || 0;
+        } else if (col === columns[0]) {
+            // Put the subtotal label in the first column
+            return subtotalLabel;
+        }
+        return "";
+    });
+
+    const subtotalRow = worksheet.addRow(subtotalRowData);
+
+    // Apply subtotal styling
+    const subtotalStyle = groupBy?.subtotalStyle;
+    if (subtotalStyle) {
+        subtotalRow.eachCell((cell) => {
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: subtotalStyle.bg || "F2F2F2" },
+            };
+            cell.font = {
+                color: { argb: subtotalStyle.color || "000000" },
+                size: subtotalStyle.fontSize || 11,
+                bold: true,
+            };
+            cell.alignment = {
+                vertical: "middle",
+                horizontal: "center",
+            };
+
+            // Apply border if specified
+            if (subtotalStyle.border) {
+                applyBorders(worksheet, cell.address, subtotalStyle.border);
+            }
+        });
+    }
+};
+
+/**
+ * Add grand total row to worksheet
+ */
+export const addGrandTotalRow = <T>(
+    worksheet: Worksheet,
+    data: T[],
+    totals: TotalsType,
+    columns: Partial<Column>[]
+) => {
+    if (!totals || !totals.showGrandTotal || !totals.columns.length) return;
+
+    const calculatedTotals = calculateTotals(data, totals);
+    const grandTotalLabel = totals.grandTotalLabel || "Grand Total";
+
+    // Create grand total row data
+    const grandTotalRowData: (string | number)[] = columns.map((col) => {
+        const columnKey = col.key as string;
+
+        if (totals.columns.includes(columnKey)) {
+            return calculatedTotals[columnKey] || 0;
+        } else if (col === columns[0]) {
+            // Put the grand total label in the first column
+            return grandTotalLabel;
+        }
+        return "";
+    });
+
+    const grandTotalRow = worksheet.addRow(grandTotalRowData);
+
+    // Apply grand total styling
+    const grandTotalStyle = totals.grandTotalStyle;
+    if (grandTotalStyle) {
+        grandTotalRow.eachCell((cell) => {
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: grandTotalStyle.bg || "4472C4" },
+            };
+            cell.font = {
+                color: { argb: grandTotalStyle.color || "FFFFFF" },
+                size: grandTotalStyle.fontSize || 12,
+                bold: true,
+            };
+            cell.alignment = {
+                vertical: "middle",
+                horizontal: "center",
+            };
+
+            // Apply border if specified
+            if (grandTotalStyle.border) {
+                applyBorders(worksheet, cell.address, grandTotalStyle.border);
+            }
+        });
+    }
 };
