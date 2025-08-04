@@ -8,6 +8,8 @@ import {
     getWorksheetColumns,
     addSubtitle,
     groupDataByConditions,
+    addSubtotalRow,
+    addGrandTotalRow,
 } from "./utils";
 import { getProcessPath } from "./process";
 
@@ -24,6 +26,7 @@ export function exportToXlsx<T>(props: Props<T>): void {
         title = null,
         columnsStyle = null,
         groupBy = null,
+        totals = null,
     } = props;
 
     const workbook = new ExcelJS.Workbook();
@@ -105,7 +108,17 @@ export function exportToXlsx<T>(props: Props<T>): void {
                     const rowValues = columns.map((col) => row[col.key as keyof typeof row]);
                     worksheet.addRow(rowValues);
                 });
+
+                // Add subtotal row if enabled
+                if (groupBy.showSubtotals && totals && totals.columns.length > 0) {
+                    addSubtotalRow(worksheet, group.data, totals, columns, groupBy);
+                }
             });
+
+            // Add grand total row for grouped data if enabled
+            if (totals && totals.showGrandTotal && totals.columns.length > 0) {
+                addGrandTotalRow(worksheet, dataToAdd, totals, columns);
+            }
         } else {
             // Regular mode without grouping
             const headerRow = worksheet.addRow(columns.map((col) => col.header));
@@ -160,6 +173,11 @@ export function exportToXlsx<T>(props: Props<T>): void {
             dataToAdd.forEach((row) => {
                 worksheet.addRow(row);
             });
+        }
+
+        // Add grand total row if enabled
+        if (totals && totals.showGrandTotal && totals.columns.length > 0) {
+            addGrandTotalRow(worksheet, dataToAdd, totals, columns);
         }
     };
     if (sheetsBy) {

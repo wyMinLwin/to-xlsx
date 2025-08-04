@@ -84,6 +84,32 @@ async function main() {
                         left: { style: "thin", color: "0070C0" },
                     },
                 },
+                showSubtotals: true,
+                subtotalStyle: {
+                    bg: "E6F3FF",
+                    color: "000000",
+                    fontSize: 11,
+                    border: {
+                        all: { style: "thin", color: "0070C0" },
+                    },
+                },
+            },
+            totals: {
+                columns: ["salary"],
+                showGrandTotal: true,
+                subtotalLabel: "Age Group Subtotal",
+                grandTotalLabel: "Company Total",
+                operations: {
+                    salary: "sum",
+                },
+                grandTotalStyle: {
+                    bg: "4472C4",
+                    color: "FFFFFF",
+                    fontSize: 13,
+                    border: {
+                        all: { style: "thick", color: "000000" },
+                    },
+                },
             },
         });
         console.log("✅ Successfully exported!");
