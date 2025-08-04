@@ -17,6 +17,8 @@
 - Rename SheetsGroupByType -> SheetsByType, sheetsGroupBy -> sheetsBy
 - Rename HeadersType -> ColumnHeadersType, headers -> columnHeaders
 - README
+- Updated to ![Static Badge](https://img.shields.io/badge/runtime--save-1.1.1-blue)
+
 
 ## [0.0.4] - Jun 22, 2025
 
